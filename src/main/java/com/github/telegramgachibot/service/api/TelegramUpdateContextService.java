@@ -1,4 +1,4 @@
-package com.github.telegramgachibot.service;
+package com.github.telegramgachibot.service.api;
 
 public interface TelegramUpdateContextService {
 

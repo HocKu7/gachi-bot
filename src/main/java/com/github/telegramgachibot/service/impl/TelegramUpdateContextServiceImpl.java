@@ -1,4 +1,4 @@
-package com.github.telegramgachibot.service;
+package com.github.telegramgachibot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.github.telegramgachibot.entity.BotAnswerEntity;
+import com.github.telegramgachibot.service.api.BotAnswerService;
+import com.github.telegramgachibot.service.api.TelegramUpdateContextService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
@@ -15,13 +17,14 @@ import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendAudio;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-//@ConditionalOnProperty(value = "${application.telegram.bot-enable}")
+@ConditionalOnProperty(value = "${application.telegram.bot-enable}", havingValue = "true")
 public class TelegramUpdateContextServiceImpl implements TelegramUpdateContextService {
 
     private final TelegramBot telegramBot;

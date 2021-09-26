@@ -6,6 +6,8 @@ import java.nio.file.Files;
 
 import com.github.telegramgachibot.TestConfig;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
+import com.github.telegramgachibot.entity.constant.BotAnswerType;
+import com.github.telegramgachibot.service.api.BotAnswerService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +39,10 @@ class BotAnswerServiceImplTest {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("test.file", allBytes);
 
         //WHEN
-        BotAnswerEntity actualEntity = botAnswerService.createByFile(mockMultipartFile);
+        BotAnswerEntity actualEntity = botAnswerService.createByFile(mockMultipartFile, BotAnswerType.AUDIO);
 
         //THEN
         BotAnswerEntity findedEntity = testEntityManager.find(BotAnswerEntity.class, actualEntity.getId());
         assertThat(actualEntity.getId()).isEqualTo(findedEntity.getId());
-    }
-
-    @Test
-    void getById() {
     }
 }
