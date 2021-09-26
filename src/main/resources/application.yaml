@@ -1,0 +1,18 @@
+application:
+  telegram:
+    api-key: ${API_KEY}
+    bot-enable: true
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot
+    password: root
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    com.github.telegramgachibot: debug
