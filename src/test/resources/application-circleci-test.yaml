@@ -4,8 +4,8 @@ application:
     bot-enable: false
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot
-    password: root
+    url: jdbc:postgresql://localhost:5432/postgres
+    password:
     username: postgres
     driver-class-name: org.postgresql.Driver
   jpa:

@@ -36,7 +36,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class BotAnswerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private byte[] content;
