@@ -1,12 +1,13 @@
 package com.github.telegramgachibot.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.transaction.Transactional;
 
+import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.constant.BotAnswerType;
 import com.github.telegramgachibot.repo.BotAnswerRepository;
@@ -22,29 +23,37 @@ public class BotAnswerServiceImpl implements BotAnswerService {
 
     private final BotAnswerRepository botAnswerRepository;
 
+    @SneakyThrows
     @Override
     @Transactional
     public BotAnswerEntity createByFile(MultipartFile multipartFile,
                                         BotAnswerType botAnswerType) {
-
         BotAnswerEntity botAnswerEntity = null;
-        try {
-            botAnswerEntity = BotAnswerEntity.builder()
+        if (BotAnswerType.AUDIO.equals(botAnswerType)) {
+            botAnswerEntity = AudioBotAnswerEntity.builder()
                     .content(multipartFile.getBytes())
                     .fileName(multipartFile.getName())
                     .size(multipartFile.getSize())
                     .botAnswerType(botAnswerType)
                     .build();
-            botAnswerRepository.save(botAnswerEntity);
-            log.debug("Сущность BotAnswerEntity c id = {} успешно сохранена", botAnswerEntity.getId());
-        } catch (IOException e) {
-            log.error("При попытке сохранить файл fileName = {} произошла ошибка", multipartFile.getOriginalFilename());
+        } else {
+            throw new NotImplementedException();
         }
+//        botAnswerEntity = BotAnswerEntity.builder()
+//                .content(multipartFile.getBytes())
+//                .fileName(multipartFile.getName())
+//                .size(multipartFile.getSize())
+//                .botAnswerType(botAnswerType)
+//                .build();
+        botAnswerRepository.save(botAnswerEntity);
+        log.debug("Сущность BotAnswerEntity c id = {} успешно сохранена", botAnswerEntity.getId());
         return botAnswerEntity;
     }
 
     @Override
+    @Transactional
     public BotAnswerEntity getById(Long id) {
-        return botAnswerRepository.getById(id);
+        return botAnswerRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Сущность не найдена"));
     }
 }

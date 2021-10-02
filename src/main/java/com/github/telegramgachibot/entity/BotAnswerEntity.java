@@ -2,14 +2,17 @@ package com.github.telegramgachibot.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,7 +35,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @SuperBuilder
 @Table(name = "bot_answer")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "answer_type")
+@DiscriminatorColumn(name = "answer_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = BotAnswerType.Values.NONE)
 public class BotAnswerEntity {
 
     @Id
@@ -51,9 +55,10 @@ public class BotAnswerEntity {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime createDttm;
+    private Instant createDttm;
 
     @OneToMany(mappedBy = "botAnswer")
+    @EqualsAndHashCode.Exclude
     private List<RequestPhraseEntity> requestPhrases;
 
 }

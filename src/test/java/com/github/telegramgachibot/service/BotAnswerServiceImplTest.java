@@ -1,10 +1,9 @@
 package com.github.telegramgachibot.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import com.github.telegramgachibot.TestConfig;
+import com.github.telegramgachibot.TestUtil;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.constant.BotAnswerType;
 import com.github.telegramgachibot.service.api.BotAnswerService;
@@ -15,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,9 +33,7 @@ class BotAnswerServiceImplTest {
     void createByFile_simpleSaving_savedToDb() throws IOException {
 
         //GIVEN
-        File file = new File("src/test/resources/test.mp3");
-        byte[] allBytes = Files.readAllBytes(file.toPath());
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("test.file", allBytes);
+        MultipartFile mockMultipartFile = TestUtil.getTestFile();
 
         //WHEN
         BotAnswerEntity actualEntity = botAnswerService.createByFile(mockMultipartFile, BotAnswerType.AUDIO);
@@ -44,5 +41,19 @@ class BotAnswerServiceImplTest {
         //THEN
         BotAnswerEntity findedEntity = testEntityManager.find(BotAnswerEntity.class, actualEntity.getId());
         assertThat(actualEntity.getId()).isEqualTo(findedEntity.getId());
+    }
+
+    @Test
+    void getById() {
+
+        //GIVEN
+        MultipartFile mockMultipartFile = TestUtil.getTestFile();
+        BotAnswerEntity expectedEntity = botAnswerService.createByFile(mockMultipartFile, BotAnswerType.AUDIO);
+
+        //WHEN
+        BotAnswerEntity actualEntity = botAnswerService.getById(expectedEntity.getId());
+
+        //THEN
+        assertThat(actualEntity).isEqualTo(expectedEntity);
     }
 }

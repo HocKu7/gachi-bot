@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 
+import com.github.telegramgachibot.dto.BotAnswerDto;
 import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
 import com.github.telegramgachibot.service.api.AudioBotAnswerService;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,8 @@ public class BotAnswerController {
 
     private final AudioBotAnswerService botAnswerService;
 
+    private final ModelMapper modelMapper;
+
     @PostMapping("/upload")
     public ResponseEntity<Void> uploadAnswer(@RequestParam("files") MultipartFile[] multipartFiles) {
 
@@ -38,8 +42,10 @@ public class BotAnswerController {
     }
 
     @GetMapping("/{id}")
-    public AudioBotAnswerEntity getById(@PathVariable Long id) {
+    public BotAnswerDto getById(@PathVariable Long id) {
 
-        return botAnswerService.getById(id);
+        AudioBotAnswerEntity byId = botAnswerService.getById(id);
+        BotAnswerDto dto = modelMapper.map(byId, BotAnswerDto.class);
+        return dto;
     }
 }

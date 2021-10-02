@@ -1,6 +1,6 @@
 application:
   telegram:
-    api-key: ${API_KEY}
+    api-key: ""
     bot-enable: false
 spring:
   datasource:
