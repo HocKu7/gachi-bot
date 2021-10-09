@@ -2,6 +2,7 @@ application:
   telegram:
     api-key: ${API_KEY}
     bot-enable: false
+    limit: 100
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot

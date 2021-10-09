@@ -1,4 +1,4 @@
-package com.github.telegramgachibot.service.impl;
+package com.github.telegramgachibot.service.telegram;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,16 +7,15 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.github.telegramgachibot.entity.BotAnswerEntity;
-import com.github.telegramgachibot.service.api.BotAnswerService;
+import com.github.telegramgachibot.service.api.CommandSettingService;
 import com.github.telegramgachibot.service.api.TelegramUpdateContextService;
+import com.github.telegramgachibot.service.api.TelegramUpdateHandler;
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.GetUpdates;
-import com.pengrad.telegrambot.request.SendAudio;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,31 +28,30 @@ public class TelegramUpdateContextServiceImpl implements TelegramUpdateContextSe
 
     private final TelegramBot telegramBot;
 
-    private final BotAnswerService botAnswerService;
+    private final TelegramUpdateHandler telegramUpdateHandler;
+
+    private final CommandSettingService commandSettingService;
+
+    @Value("${application.telegram.limit}")
+    private Integer limitRequest;
 
     @Override
-    @Scheduled(fixedDelay = 1000L)
+    @Scheduled(fixedDelay = 3000L)
     @Transactional
     public void updateContext() {
 
-        GetUpdates getUpdates = new GetUpdates().limit(100).offset(0).timeout(0);
+        Integer currentOffset = commandSettingService.getCurrentOffset();
+        GetUpdates getUpdates = new GetUpdates()
+                .limit(limitRequest)
+                .offset(currentOffset)
+                .timeout(0);
         GetUpdatesResponse updatesResponse = telegramBot.execute(getUpdates);
         List<Update> updates = updatesResponse.updates();
 
+        //todo добавить ForkJoinPool
         for (Update update : updates) {
 
-            Message message = update.message();
-            Long chatId = message.chat().id();
-            log.debug("Got message charId = {}, message {}", chatId, message.text());
-
-            BotAnswerEntity botAnswerEntity = botAnswerService.getById(1L);
-            SendAudio sendMessageRequest = new SendAudio(chatId, botAnswerEntity.getContent());
-
-            telegramBot.execute(sendMessageRequest);
-            log.debug("Send response chatId = {}", chatId);
-
-            //fixme test
-            break;
+            telegramUpdateHandler.handleUpdate(update);
         }
     }
 }

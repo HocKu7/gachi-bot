@@ -5,12 +5,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.constant.BotAnswerType;
-import com.github.telegramgachibot.repo.BotAnswerRepository;
+import com.github.telegramgachibot.repo.BotAnswerDao;
 import com.github.telegramgachibot.service.api.BotAnswerService;
 
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class BotAnswerServiceImpl implements BotAnswerService {
 
-    private final BotAnswerRepository botAnswerRepository;
+    private final BotAnswerDao botAnswerDao;
 
     @SneakyThrows
     @Override
@@ -45,7 +47,7 @@ public class BotAnswerServiceImpl implements BotAnswerService {
 //                .size(multipartFile.getSize())
 //                .botAnswerType(botAnswerType)
 //                .build();
-        botAnswerRepository.save(botAnswerEntity);
+        botAnswerDao.save(botAnswerEntity);
         log.debug("Сущность BotAnswerEntity c id = {} успешно сохранена", botAnswerEntity.getId());
         return botAnswerEntity;
     }
@@ -53,7 +55,13 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     @Override
     @Transactional
     public BotAnswerEntity getById(Long id) {
-        return botAnswerRepository.findById(id).orElseThrow(() ->
+        return botAnswerDao.findById(id).orElseThrow(() ->
                 new RuntimeException("Сущность не найдена"));
+    }
+
+    @Override
+    public List<BotAnswerEntity> findByFileName(String text) {
+
+        return botAnswerDao.findByFileName(text);
     }
 }

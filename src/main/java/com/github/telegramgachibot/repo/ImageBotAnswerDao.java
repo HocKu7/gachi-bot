@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ImageBotAnswerRepository extends JpaRepository<ImageBotAnswerEntity, Long> {
+public interface ImageBotAnswerDao extends JpaRepository<ImageBotAnswerEntity, Long> {
 }

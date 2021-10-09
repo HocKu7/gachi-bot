@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 
 import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
-import com.github.telegramgachibot.repo.AudioBotAnswerRepository;
+import com.github.telegramgachibot.repo.AudioBotAnswerDao;
 import com.github.telegramgachibot.service.api.AudioBotAnswerService;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AudioBotAnswerServiceImpl implements AudioBotAnswerService {
 
-    private final AudioBotAnswerRepository botAnswerRepository;
+    private final AudioBotAnswerDao botAnswerRepository;
 
     @Override
     @Transactional

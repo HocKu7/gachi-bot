@@ -1,5 +1,7 @@
 package com.github.telegramgachibot.service.api;
 
+import java.util.List;
+
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.constant.BotAnswerType;
 
@@ -11,4 +13,6 @@ public interface BotAnswerService {
                                  BotAnswerType botAnswerType);
 
     BotAnswerEntity getById(Long id);
+
+    List<BotAnswerEntity> findByFileName(String text);
 }
