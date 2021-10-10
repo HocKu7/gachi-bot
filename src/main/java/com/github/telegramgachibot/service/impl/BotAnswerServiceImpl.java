@@ -1,6 +1,5 @@
 package com.github.telegramgachibot.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -20,10 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class BotAnswerServiceImpl implements BotAnswerService {
 
     private final BotAnswerDao botAnswerDao;
+
+    public BotAnswerServiceImpl(BotAnswerDao botAnswerDao) {
+        this.botAnswerDao = botAnswerDao;
+    }
 
     @SneakyThrows
     @Override
@@ -63,5 +65,11 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     public List<BotAnswerEntity> findByFileName(String text) {
 
         return botAnswerDao.findByFileName(text);
+    }
+
+    @Override
+    public List<BotAnswerEntity> findAll() {
+
+        return botAnswerDao.findAll();
     }
 }

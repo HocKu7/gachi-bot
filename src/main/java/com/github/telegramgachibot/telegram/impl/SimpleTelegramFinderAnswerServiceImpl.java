@@ -1,4 +1,4 @@
-package com.github.telegramgachibot.service.impl;
+package com.github.telegramgachibot.telegram.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,11 +8,9 @@ import java.util.Optional;
 
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.service.api.BotAnswerService;
-import com.github.telegramgachibot.service.api.TelegramFinderAnswerService;
+import com.github.telegramgachibot.telegram.api.TelegramFinderAnswerService;
 
-import org.springframework.stereotype.Service;
-
-@Service
+//@Service
 @RequiredArgsConstructor
 @Slf4j
 public class SimpleTelegramFinderAnswerServiceImpl implements TelegramFinderAnswerService {
@@ -20,9 +18,13 @@ public class SimpleTelegramFinderAnswerServiceImpl implements TelegramFinderAnsw
     private final BotAnswerService botAnswerService;
 
     @Override
-    public Optional<BotAnswerEntity> findAnswer(String inputMessage) {
+    public Optional<BotAnswerEntity> findAnswer(List<String> args) {
 
-        List<BotAnswerEntity> botAnswerEntities = botAnswerService.findByFileName(inputMessage);
+        String arg = "Boss in this gym.mp3";
+        if (!args.isEmpty()) {
+            arg = String.join(" ", args);
+        }
+        List<BotAnswerEntity> botAnswerEntities = botAnswerService.findByFileName(arg);
         if (botAnswerEntities.isEmpty()) {
             return Optional.empty();
         }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+import java.security.Principal;
 
 import com.github.telegramgachibot.dto.BotAnswerDto;
 import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
@@ -42,7 +43,7 @@ public class BotAnswerController {
     }
 
     @GetMapping("/{id}")
-    public BotAnswerDto getById(@PathVariable Long id) {
+    public BotAnswerDto getById(@PathVariable Long id, Principal principal) {
 
         AudioBotAnswerEntity byId = botAnswerService.getById(id);
         BotAnswerDto dto = modelMapper.map(byId, BotAnswerDto.class);

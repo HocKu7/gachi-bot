@@ -3,6 +3,7 @@ application:
     api-key: ${API_KEY}
     bot-enable: false
     limit: 100
+    bot-username: gachimuachi_bot
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot
@@ -11,7 +12,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 

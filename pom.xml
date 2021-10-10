@@ -15,6 +15,7 @@
     <description>telegram-gachi-bot</description>
     <properties>
         <java.version>1.8</java.version>
+        <telegram.version>5.0.1</telegram.version>
     </properties>
     <dependencies>
         <dependency>
@@ -35,9 +36,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.pengrad</groupId>
-            <artifactId>java-telegram-bot-api</artifactId>
-            <version>5.2.0</version>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>${telegram.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambotsextensions</artifactId>
+            <version>${telegram.version}</version>
         </dependency>
 
         <dependency>
@@ -67,6 +73,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-orm</artifactId>
+            <version>5.11.7.Final</version>
         </dependency>
 
     </dependencies>

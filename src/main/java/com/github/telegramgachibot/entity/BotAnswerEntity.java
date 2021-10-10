@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -57,7 +58,7 @@ public class BotAnswerEntity {
     @Column(nullable = false, updatable = false)
     private Instant createDttm;
 
-    @OneToMany(mappedBy = "botAnswer")
+    @OneToMany(mappedBy = "botAnswer", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private List<RequestPhraseEntity> requestPhrases;
 

@@ -15,4 +15,6 @@ public interface BotAnswerService {
     BotAnswerEntity getById(Long id);
 
     List<BotAnswerEntity> findByFileName(String text);
+
+    List<BotAnswerEntity> findAll();
 }
