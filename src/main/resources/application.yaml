@@ -6,9 +6,9 @@ application:
     bot-username: gachimuachi_bot
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot
-    password: root
-    username: postgres
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=gachi-bot}
+    password: ${DATABASE_USER:root}
+    username: ${DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
