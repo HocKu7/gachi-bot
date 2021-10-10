@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.github.telegramgachibot.GachiBotUtil;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.RequestPhraseEntity;
+import com.github.telegramgachibot.service.api.BotAnswerService;
 import com.github.telegramgachibot.telegram.api.TelegramFinderAnswerService;
 
 import org.apache.lucene.search.Query;
@@ -19,8 +20,11 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -30,14 +34,17 @@ public class FullTextTelegramFinderAnswerServiceImpl implements TelegramFinderAn
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private BotAnswerService botAnswerService;
+
     @Override
     @Transactional
     public Optional<BotAnswerEntity> findAnswer(List<String> args) {
 
-        String arg = args.get(0);
-        if (arg == null) {
-            arg = "boss";
+        if (CollectionUtils.isEmpty(args)) {
+            return getRandomAnswer(null);
         }
+        String arg = String.join(" ", args);
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
                 .buildQueryBuilder()
@@ -53,9 +60,20 @@ public class FullTextTelegramFinderAnswerServiceImpl implements TelegramFinderAn
         List<RequestPhraseEntity> resultList = fullTextQuery.getResultList();
 
         if (resultList.isEmpty()) {
-            log.debug("По запросу: {} не удалось найти не одной фразы", arg);
+            return getRandomAnswer(arg);
         }
-        int index = new Random().nextInt() % resultList.size();
-        return Optional.empty();
+
+        int randomIndexBySize = GachiBotUtil.getRandomIndexBySize(resultList.size());
+        RequestPhraseEntity requestPhraseEntity = resultList.get(randomIndexBySize);
+        return Optional.ofNullable(requestPhraseEntity.getBotAnswer());
+    }
+
+    private Optional<BotAnswerEntity> getRandomAnswer(@Nullable String arg) {
+        log.debug("По запросу: {} не удалось найти не одной фразы", arg);
+        BotAnswerEntity randomOne = botAnswerService.getRandomOne();
+        if (randomOne == null) {
+            return Optional.empty();
+        }
+        return Optional.of(randomOne);
     }
 }

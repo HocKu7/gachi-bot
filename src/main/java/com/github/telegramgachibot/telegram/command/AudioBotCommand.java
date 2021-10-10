@@ -1,6 +1,7 @@
 package com.github.telegramgachibot.telegram.command;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.telegram.api.TelegramFinderAnswerService;
@@ -27,8 +28,12 @@ public class AudioBotCommand extends AbstractBotCommand {
     @Override
     protected void handleCommand(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception {
 
-        BotAnswerEntity botAnswerEntity = answerService.findAnswer(Arrays.asList(strings))
-                .orElseThrow(RuntimeException::new);
-        sendAudio(botAnswerEntity, chat.getId(), absSender);
+        Optional<BotAnswerEntity> answerBox = answerService.findAnswer(Arrays.asList(strings));
+        if (answerBox.isPresent()) {
+            sendAudio(answerBox.get(), chat.getId(), absSender);
+            return;
+        }
+
+        sendDefaultAnswer(chat.getId(), absSender);
     }
 }

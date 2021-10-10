@@ -1,6 +1,7 @@
 package com.github.telegramgachibot.telegram.command;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.service.api.BotAnswerService;
@@ -28,9 +29,14 @@ public class AllGachiBotCommand extends AbstractBotCommand {
     protected void handleCommand(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception {
 
         List<BotAnswerEntity> all = botAnswerService.findAll();
+        String result = formMessage(all);
+        sendTextMessage(result, chat.getId(), absSender);
+    }
 
-        for (BotAnswerEntity botAnswerEntity : all) {
-            sendAudio(botAnswerEntity, chat.getId(), absSender);
-        }
+    private String formMessage(List<BotAnswerEntity> botAnswerEntities) {
+
+        return botAnswerEntities.stream()
+                .map(BotAnswerEntity::getFileName)
+                .collect(Collectors.joining("\n"));
     }
 }

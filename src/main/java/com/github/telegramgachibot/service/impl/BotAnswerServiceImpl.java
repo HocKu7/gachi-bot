@@ -8,12 +8,14 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.github.telegramgachibot.GachiBotUtil;
 import com.github.telegramgachibot.entity.AudioBotAnswerEntity;
 import com.github.telegramgachibot.entity.BotAnswerEntity;
 import com.github.telegramgachibot.entity.constant.BotAnswerType;
 import com.github.telegramgachibot.repo.BotAnswerDao;
 import com.github.telegramgachibot.service.api.BotAnswerService;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,5 +73,17 @@ public class BotAnswerServiceImpl implements BotAnswerService {
     public List<BotAnswerEntity> findAll() {
 
         return botAnswerDao.findAll();
+    }
+
+    @Override
+    public @Nullable
+    BotAnswerEntity getRandomOne() {
+
+        List<BotAnswerEntity> all = botAnswerDao.findAll();
+        if (all.isEmpty()) {
+            return null;
+        }
+        int randomIndexBySize = GachiBotUtil.getRandomIndexBySize(all.size());
+        return all.get(randomIndexBySize);
     }
 }

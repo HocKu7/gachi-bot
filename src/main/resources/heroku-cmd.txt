@@ -1,0 +1,2 @@
+heroku logs --tail -a gachi-telegram-bot
+heroku ps:scale web=0 -a gachi-telegram-bot

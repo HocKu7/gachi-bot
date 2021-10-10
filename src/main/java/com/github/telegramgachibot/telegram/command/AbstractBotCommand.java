@@ -49,5 +49,20 @@ public abstract class AbstractBotCommand extends BotCommand {
         log.debug("Файл fileName={} отправлен в чат chatId={}", fileName, chatId);
     }
 
+    protected void sendDefaultAnswer(Long chatId, AbsSender absSender) throws TelegramApiException {
+
+        sendTextMessage("Спроси шо попроще...", chatId, absSender);
+    }
+
+    protected void sendTextMessage(String message, Long chatId, AbsSender absSender) throws TelegramApiException {
+
+        SendMessage sendMessage = SendMessage.builder()
+                .chatId(String.valueOf(chatId))
+                .text(message)
+                .build();
+        absSender.execute(sendMessage);
+        log.debug("Сообщение:\"{}\" отправлено в чат chatId={}", message, chatId);
+    }
+
     protected abstract void handleCommand(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception;
 }

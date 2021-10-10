@@ -17,4 +17,6 @@ public interface BotAnswerService {
     List<BotAnswerEntity> findByFileName(String text);
 
     List<BotAnswerEntity> findAll();
+
+    BotAnswerEntity getRandomOne();
 }
