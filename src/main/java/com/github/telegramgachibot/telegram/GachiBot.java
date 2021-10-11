@@ -16,12 +16,16 @@ public class GachiBot extends TelegramLongPollingCommandBot {
     @Value("${application.telegram.api-key}")
     private String token;
 
-
     @Override
     public void processNonCommandUpdate(Update update) {
 
+        if (update == null) {
+            return;
+        }
         Message message = update.getMessage();
-        log.debug("Получил сообщение: " + message.getText());
+        if (message != null) {
+            log.debug("Получил сообщение: " + message.getText());
+        }
     }
 
     @Override
